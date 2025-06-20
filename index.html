@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR-Medics BreatheFree</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#cfa67d',
+                        secondary: '#ffffff',
+                        lightgray: '#f5f5f5',
+                        success: '#4ade80',
+                        danger: '#f87171',
+                        dark: '#333333'
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: white;
+            height: 100vh;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            background: white;
+            overflow-y: auto;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        .btn {
+            padding: 14px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #cfa67d;
+            color: white;
+        }
+        
+        .btn-outline {
+            border: 1px solid #cfa67d;
+            color: #cfa67d;
+        }
+        
+        .btn-danger {
+            background-color: #f87171;
+            color: white;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        /* Breathing animation */
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        
+        .breathing {
+            animation: breathe 3s infinite ease-in-out;
+        }
+        
+        /* Progress bar styles */
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background: #f0f0f0;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        /* Chart styles */
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 20px;
+            background: #cfa67d;
+            border-radius: 5px 5px 0 0;
+        }
+    </style>
+</head>
+<body class="bg-lightgray">
+    <div class="app-container">
+        <!-- 1. Splash Screen -->
+        <div id="splash-screen" class="screen active flex items-center justify-center">
+            <div class="text-center">
+                <div class="breathing mb-6">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6.38 20.95c-1.46-.59-2.38-1.53-2.38-3.95 0-3 2-4 2-7 0-1.82.5-2.95 1.4-3.75M12 12c0 3-2 4-2 7 0 2.42.92 3.36 2.38 3.95M12 12c0 3 2 4 2 7 0 2.42-.92 3.36-2.38 3.95M12 12c0-3-2-4-2-7 0-2.42.92-3.36 2.38-3.95M12 12c0-3 2-4 2-7 0-2.42-.92-3.36-2.38-3.95M17.62 3.05c1.46.59 2.38 1.53 2.38 3.95 0 3-2 4-2 7 0 1.82-.5 2.95-1.4 3.75"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-dark mb-2">AR-Medics <span class="text-primary">BreatheFree</span></h1>
+                <p class="text-gray-500 mb-8">Breathe Smarter with AR-Medics</p>
+                <div class="w-8 h-8 border-t-4 border-primary border-solid rounded-full animate-spin mx-auto"></div>
+            </div>
+        </div>
+
+        <!-- 2. Login / Signup Screen -->
+        <div id="login-screen" class="screen">
+            <div class="flex-1 flex flex-col justify-center items-center">
+                <div class="w-full max-w-sm">
+                    <div class="text-center mb-10">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4">
+                            <path d="M6.38 20.95c-1.46-.59-2.38-1.53-2.38-3.95 0-3 2-4 2-7 0-1.82.5-2.95 1.4-3.75M12 12c0 3-2 4-2 7 0 2.42.92 3.36 2.38 3.95M12 12c0 3 2 4 2 7 0 2.42-.92 3.36-2.38 3.95M12 12c0-3-2-4-2-7 0-2.42.92-3.36 2.38-3.95M12 12c0-3 2-4 2-7 0-2.42-.92-3.36-2.38-3.95M17.62 3.05c1.46.59 2.38 1.53 2.38 3.95 0 3-2 4-2 7 0 1.82-.5 2.95-1.4 3.75"></path>
+                        </svg>
+                        <h1 class="text-2xl font-bold text-dark">AR-Medics <span class="text-primary">BreatheFree</span></h1>
+                        <p class="text-gray-500 text-sm">Breathe Smarter with AR-Medics</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="email">Email</label>
+                        <input class="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50" id="email" type="email" placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="password">Password</label>
+                        <input class="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50" id="password" type="password" placeholder="••••••••">
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <button class="btn btn-primary w-full" onclick="showScreen('bluetooth-screen')">Login as Patient</button>
+                        <button class="btn btn-outline w-full">Login as Doctor</button>
+                        <button class="w-full text-center py-3 text-gray-500 text-sm" onclick="showScreen('bluetooth-screen')">Continue as Guest</button>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <button class="px-4 py-2 rounded-full text-sm border border-gray-200">
+                            English 🇬🇧 / हिंदी 🇮🇳
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Bluetooth Connection Screen -->
+        <div id="bluetooth-screen" class="screen">
+            <div class="flex items-center mb-6">
+                <button class="mr-4" onclick="showScreen('login-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold">Connect to Device</h1>
+            </div>
+            
+            <div class="card mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                            <path d="M6.5 6.5l11 11M17.5 6.5l-11 11M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
+                        </svg>
+                        <span class="text-gray-700">Connection Status</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="h-3 w-3 rounded-full bg-danger mr-2"></span>
+                        <span class="text-danger">Not Connected</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary w-full mb-2" id="scan-button" onclick="scanDevices()">
+                    <div class="flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        Scan for Devices
+                    </div>
+                </button>
+            </div>
+            
+            <h2 class="text-gray-500 text-sm mb-3">Available Devices</h2>
+            
+            <div id="device-list" class="space-y-3">
+                <div class="card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-medium">BreatheFree Spirometer</h3>
+                            <p class="text-xs text-gray-500">BF-2023-A7</p>
+                        </div>
+                        <button class="btn btn-primary py-2 px-4" onclick="connectDevice(this)">Connect</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-medium">AR-Medics Lung Monitor</h3>
+                            <p class="text-xs text-gray-500">ARM-LM-01</p>
+                        </div>
+                        <button class="btn btn-primary py-2 px-4" onclick="connectDevice(this)">Connect</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-6">
+                <button class="btn btn-outline w-full" onclick="showScreen('home-screen')">Skip for now</button>
+            </div>
+        </div>
+
+        <!-- 4. Home Dashboard -->
+        <div id="home-screen" class="screen pb-20">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold">Hello, Sarah 👋</h1>
+                    <p class="text-gray-500">Wednesday, 15 May</p>
+                </div>
+                <div class="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white">
+                    <span class="font-medium">S</span>
+                </div>
+            </div>
+            
+            <div class="card mb-6 bg-gradient-to-r from-primary/10 to-primary/5">
+                <h2 class="text-lg font-medium mb-4">Lung Health Summary</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-xl">
+                        <p class="text-sm text-gray-500 mb-1">FEV1/FVC Ratio</p>
+                        <div class="flex items-end">
+                            <span class="text-2xl font-bold">78%</span>
+                            <span class="text-success text-sm ml-2">+2%</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl">
+                        <p class="text-sm text-gray-500 mb-1">Lung Age</p>
+                        <div class="flex items-end">
+                            <span class="text-2xl font-bold">32</span>
+                            <span class="text-sm ml-2">years</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button class="card flex flex-col items-center justify-center py-6" onclick="showScreen('test-screen')">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <span class="font-medium">Start Test</span>
+                </button>
+                
+                <button class="card flex flex-col items-center justify-center py-6" onclick="showScreen('reports-screen')">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                        <path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/>
+                    </svg>
+                    <span class="font-medium">View Reports</span>
+                </button>
+            </div>
+            
+            <h2 class="text-lg font-medium mb-4">Recent Activity</h2>
+            
+            <div class="card mb-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Last Test Result</h3>
+                        <p class="text-xs text-gray-500">May 12, 2023 • 10:30 AM</p>
+                    </div>
+                    <span class="px-3 py-1 bg-success/20 text-success rounded-full text-xs">Improved</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">FEV1/FVC</span>
+                        <span class="font-medium">78%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Device Connected</h3>
+                        <p class="text-xs text-gray-500">May 10, 2023 • 09:15 AM</p>
+                    </div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6.5 6.5l11 11M17.5 6.5l-11 11M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
+                    </svg>
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Device Name</span>
+                        <span class="font-medium">BreatheFree Spirometer</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 max-w-[430px] mx-auto">
+                <button class="nav-item text-primary" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('test-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <span>Test</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('profile-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 5. Start Test Screen -->
+        <div id="test-screen" class="screen pb-20">
+            <div class="flex items-center mb-6">
+                <button class="mr-4" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold">Lung Function Test</h1>
+            </div>
+            
+            <div class="card mb-6" id="test-instructions">
+                <h2 class="text-lg font-medium mb-3">Breathing Instructions</h2>
+                <ol class="space-y-3 text-gray-700 mb-6">
+                    <li class="flex">
+                        <span class="bg-primary/20 h-6 w-6 rounded-full flex items-center justify-center text-primary mr-3 flex-shrink-0">1</span>
+                        <span>Sit upright with your back straight</span>
+                    </li>
+                    <li class="flex">
+                        <span class="bg-primary/20 h-6 w-6 rounded-full flex items-center justify-center text-primary mr-3 flex-shrink-0">2</span>
+                        <span>Take a deep breath in until your lungs are completely full</span>
+                    </li>
+                    <li class="flex">
+                        <span class="bg-primary/20 h-6 w-6 rounded-full flex items-center justify-center text-primary mr-3 flex-shrink-0">3</span>
+                        <span>Blow out as hard and fast as you can until your lungs are completely empty</span>
+                    </li>
+                    <li class="flex">
+                        <span class="bg-primary/20 h-6 w-6 rounded-full flex items-center justify-center text-primary mr-3 flex-shrink-0">4</span>
+                        <span>Repeat the test 3 times for accurate results</span>
+                    </li>
+                </ol>
+                
+                <button class="btn btn-primary w-full" onclick="startTest()">Start Test</button>
+            </div>
+            
+            <div id="test-in-progress" class="hidden flex-col flex-1">
+                <div class="card mb-6 flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-medium">Breathing Test</h2>
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs" id="test-timer">00:00</span>
+                    </div>
+                    
+                    <div class="flex-1 flex items-center justify-center">
+                        <div class="relative w-full h-40">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="breathing">
+                                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#cfa67d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M6.38 20.95c-1.46-.59-2.38-1.53-2.38-3.95 0-3 2-4 2-7 0-1.82.5-2.95 1.4-3.75M12 12c0 3-2 4-2 7 0 2.42.92 3.36 2.38 3.95M12 12c0 3 2 4 2 7 0 2.42-.92 3.36-2.38 3.95M12 12c0-3-2-4-2-7 0-2.42.92-3.36 2.38-3.95M12 12c0-3 2-4 2-7 0-2.42-.92-3.36-2.38-3.95M17.62 3.05c1.46.59 2.38 1.53 2.38 3.95 0 3-2 4-2 7 0 1.82-.5 2.95-1.4 3.75"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <canvas id="flow-graph" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-gray-500 mb-4">Blow hard and continuously until your lungs are empty</p>
+                        <button class="btn btn-danger w-full" onclick="stopTest()">Stop Test</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 max-w-[430px] mx-auto">
+                <button class="nav-item text-gray-400" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item text-primary" onclick="showScreen('test-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <span>Test</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('profile-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 6. Test Result Summary Screen -->
+        <div id="result-screen" class="screen pb-20">
+            <div class="flex items-center mb-6">
+                <button class="mr-4" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold">Test Results</h1>
+            </div>
+            
+            <div class="card mb-6 bg-gradient-to-r from-primary/10 to-primary/5">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-medium">Summary</h2>
+                    <span class="px-3 py-1 bg-success/20 text-success rounded-full text-xs">Improved</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-xl">
+                        <p class="text-xs text-gray-500 mb-1">FEV1/FVC Ratio</p>
+                        <div class="flex items-end">
+                            <span class="text-xl font-bold">78%</span>
+                            <span class="text-success text-xs ml-2">+2%</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl">
+                        <p class="text-xs text-gray-500 mb-1">Lung Age</p>
+                        <div class="flex items-end">
+                            <span class="text-xl font-bold">32</span>
+                            <span class="text-xs ml-1">years</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-600 mb-2">Your lung function has improved since your last test. Keep up the good work!</p>
+            </div>
+            
+            <div class="card mb-6">
+                <h2 class="text-lg font-medium mb-4">Detailed Metrics</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">FVC (Forced Vital Capacity)</span>
+                            <span class="font-medium">3.8 L</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-success" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">FEV1 (Forced Expiratory Volume)</span>
+                            <span class="font-medium">2.96 L</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-success" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">PEF (Peak Expiratory Flow)</span>
+                            <span class="font-medium">7.2 L/s</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-primary" style="width: 72%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">FEF25-75</span>
+                            <span class="font-medium">3.1 L/s</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-primary" style="width: 68%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 pt-2">
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">MEF25</p>
+                            <p class="font-medium">1.8 L/s</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">MEF50</p>
+                            <p class="font-medium">3.5 L/s</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">MEF75</p>
+                            <p class="font-medium">5.2 L/s</p>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">Duration of Exhale</span>
+                            <span class="font-medium">6.2 seconds</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex space-x-3 mb-6">
+                <button class="btn btn-outline flex-1" onclick="showScreen('test-screen')">Retake Test</button>
+                <button class="btn btn-primary flex-1" onclick="showScreen('reports-screen')">Save & Continue</button>
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 max-w-[430px] mx-auto">
+                <button class="nav-item text-gray-400" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item text-primary" onclick="showScreen('test-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <span>Test</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('profile-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 7. Report History Screen -->
+        <div id="reports-screen" class="screen pb-20">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-semibold">Report History</h1>
+                <button class="p-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="flex space-x-2 mb-6 overflow-x-auto py-1">
+                <button class="px-4 py-2 bg-primary text-white rounded-full text-sm whitespace-nowrap">All Reports</button>
+                <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm whitespace-nowrap">This Month</button>
+                <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm whitespace-nowrap">Last Month</button>
+                <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm whitespace-nowrap">Custom</button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="card" onclick="showScreen('detail-report-screen')">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <h3 class="font-medium">May 15, 2023</h3>
+                            <p class="text-xs text-gray-500">10:30 AM</p>
+                        </div>
+                        <span class="px-3 py-1 bg-success/20 text-success rounded-full text-xs">Improved</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">FEV1/FVC</span>
+                        <span class="font-medium">78%</span>
+                    </div>
+                </div>
+                
+                <div class="card" onclick="showScreen('detail-report-screen')">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <h3 class="font-medium">May 12, 2023</h3>
+                            <p class="text-xs text-gray-500">09:15 AM</p>
+                        </div>
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">Stable</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">FEV1/FVC</span>
+                        <span class="font-medium">76%</span>
+                    </div>
+                </div>
+                
+                <div class="card" onclick="showScreen('detail-report-screen')">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <h3 class="font-medium">May 8, 2023</h3>
+                            <p class="text-xs text-gray-500">11:45 AM</p>
+                        </div>
+                        <span class="px-3 py-1 bg-danger/20 text-danger rounded-full text-xs">Poor</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">FEV1/FVC</span>
+                        <span class="font-medium">72%</span>
+                    </div>
+                </div>
+                
+                <div class="card" onclick="showScreen('detail-report-screen')">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <h3 class="font-medium">May 5, 2023</h3>
+                            <p class="text-xs text-gray-500">08:30 AM</p>
+                        </div>
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">Stable</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">FEV1/FVC</span>
+                        <span class="font-medium">75%</span>
+                    </div>
+                </div>
+                
+                <div class="card" onclick="showScreen('detail-report-screen')">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <h3 class="font-medium">May 1, 2023</h3>
+                            <p class="text-xs text-gray-500">10:00 AM</p>
+                        </div>
+                        <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">Stable</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">FEV1/FVC</span>
+                        <span class="font-medium">74%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 max-w-[430px] mx-auto">
+                <button class="nav-item text-gray-400" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('test-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <span>Test</span>
+                </button>
+                <button class="nav-item text-primary" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('profile-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 8. Detailed Report Screen -->
+        <div id="detail-report-screen" class="screen pb-20">
+            <div class="flex items-center mb-6">
+                <button class="mr-4" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-semibold">Detailed Report</h1>
+            </div>
+            
+            <div class="card mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-lg font-medium">May 15, 2023</h2>
+                        <p class="text-xs text-gray-500">10:30 AM</p>
+                    </div>
+                    <span class="px-3 py-1 bg-success/20 text-success rounded-full text-xs">Improved</span>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">FVC (Forced Vital Capacity)</span>
+                            <span class="font-medium">3.8 L</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-success" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">FEV1 (Forced Expiratory Volume)</span>
+                            <span class="font-medium">2.96 L</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-success" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">FEV1/FVC Ratio</span>
+                            <span class="font-medium">78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-success" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-500">PEF (Peak Expiratory Flow)</span>
+                            <span class="font-medium">7.2 L/s</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-primary" style="width: 72%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-6">
+                <h2 class="text-lg font-medium mb-4">Volume vs Flow</h2>
+                <div class="chart-container">
+                    <svg width="100%" height="100%" viewBox="0 0 300 200">
+                        <path d="M0,200 C50,180 100,100 150,50 C200,0 250,20 300,50" fill="none" stroke="#cfa67d" stroke-width="3"/>
+                        <line x1="0" y1="200" x2="300" y2="200" stroke="#ddd" stroke-width="1"/>
+                        <line x1="0" y1="0" x2="0" y2="200" stroke="#ddd" stroke-width="1"/>
+                        <text x="150" y="195" text-anchor="middle" font-size="10" fill="#666">Volume (L)</text>
+                        <text x="10" y="100" text-anchor="middle" font-size="10" fill="#666" transform="rotate(-90 10,100)">Flow (L/s)</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="card mb-6">
+                <h2 class="text-lg font-medium mb-4">MEF Values</h2>
+                <div class="chart-container">
+                    <div class="flex h-full items-end justify-around">
+                        <div class="flex flex-col items-center">
+                            <div class="chart-bar bg-primary h-[35%] w-16"></div>
+                            <p class="text-xs mt-2">MEF25</p>
+                            <p class="text-xs font-medium">1.8 L/s</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="chart-bar bg-primary h-[70%] w-16"></div>
+                            <p class="text-xs mt-2">MEF50</p>
+                            <p class="text-xs font-medium">3.5 L/s</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="chart-bar bg-primary h-[90%] w-16"></div>
+                            <p class="text-xs mt-2">MEF75</p>
+                            <p class="text-xs font-medium">5.2 L/s</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-6">
+                <h2 class="text-lg font-medium mb-4">FEV1/FVC Trend</h2>
+                <div class="chart-container">
+                    <svg width="100%" height="100%" viewBox="0 0 300 200">
+                        <polyline points="0,140 60,150 120,145 180,130 240,120 300,100" fill="none" stroke="#cfa67d" stroke-width="3"/>
+                        <line x1="0" y1="200" x2="300" y2="200" stroke="#ddd" stroke-width="1"/>
+                        <line x1="0" y1="0" x2="0" y2="200" stroke="#ddd" stroke-width="1"/>
+                        <text x="150" y="195" text-anchor="middle" font-size="10" fill="#666">Time</text>
+                        <text x="10" y="100" text-anchor="middle" font-size="10" fill="#666" transform="rotate(-90 10,100)">FEV1/FVC %</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="flex space-x-3 mb-6">
+                <button class="btn btn-outline flex-1 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download PDF
+                </button>
+                <button class="btn btn-primary flex-1 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16 6 12 2 8 6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                    </svg>
+                    Share Report
+                </button>
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 max-w-[430px] mx-auto">
+                <button class="nav-item text-gray-400" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('test-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <span>Test</span>
+                </button>
+                <button class="nav-item text-primary" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('profile-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 9. Profile & Settings Screen -->
+        <div id="profile-screen" class="screen pb-20">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-semibold">Profile & Settings</h1>
+                <button class="p-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="flex flex-col items-center mb-6">
+                <div class="h-24 w-24 bg-primary/20 rounded-full flex items-center justify-center mb-3">
+                    <span class="text-3xl font-bold text-primary">S</span>
+                </div>
+                <h2 class="text-lg font-medium">Sarah Johnson</h2>
+                <p class="text-gray-500">sarah.johnson@example.com</p>
+            </div>
+            
+            <div class="card mb-6">
+                <h2 class="text-lg font-medium mb-4">Personal Information</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="age">Age</label>
+                        <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50" id="age" type="number" value="34">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="height">Height (cm)</label>
+                        <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50" id="height" type="number" value="165">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="weight">Weight (kg)</label>
+                        <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50" id="weight" type="number" value="62">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-6">
+                <h2 class="text-lg font-medium mb-4">App Settings</h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Dark Mode</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Notifications</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">Firebase Sync</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Language</label>
+                        <div class="relative">
+                            <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-primary/50">
+                                <option>English 🇬🇧</option>
+                                <option>हिंदी 🇮🇳</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn w-full mb-6 border border-gray-300 text-gray-700">
+                Logout
+            </button>
+            
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 max-w-[430px] mx-auto">
+                <button class="nav-item text-gray-400" onclick="showScreen('home-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('test-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    <span>Test</span>
+                </button>
+                <button class="nav-item text-gray-400" onclick="showScreen('reports-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Reports</span>
+                </button>
+                <button class="nav-item text-primary" onclick="showScreen('profile-screen')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profile</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show splash screen for 2 seconds then move to login
+        setTimeout(() => {
+            showScreen('login-screen');
+        }, 2000);
+        
+        // Function to show a specific screen
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show the requested screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update bottom nav highlighting based on current screen
+            if (['home-screen', 'test-screen', 'reports-screen', 'profile-screen'].includes(screenId)) {
+                updateNavHighlight(screenId);
+            }
+        }
+        
+        // Update bottom navigation highlighting
+        function updateNavHighlight(screenId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('text-primary');
+                item.classList.add('text-gray-400');
+            });
+            
+            const activeSection = screenId.split('-')[0];
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            if (activeSection === 'home') navItems[0].classList.add('text-primary');
+            if (activeSection === 'test') navItems[1].classList.add('text-primary');
+            if (activeSection === 'reports') navItems[2].classList.add('text-primary');
+            if (activeSection === 'profile') navItems[3].classList.add('text-primary');
+        }
+        
+        // Bluetooth connection simulation
+        function scanDevices() {
+            const scanButton = document.getElementById('scan-button');
+            scanButton.innerHTML = '<div class="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin mr-2"></div> Scanning...';
+            
+            setTimeout(() => {
+                scanButton.innerHTML = '<div class="flex items-center justify-center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Scan for Devices</div>';
+            }, 2000);
+        }
+        
+        // Connect to a device
+        function connectDevice(button) {
+            button.innerHTML = 'Connecting...';
+            
+            setTimeout(() => {
+                button.innerHTML = 'Connected';
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-outline');
+                
+                // Update connection status
+                const statusDot = document.querySelector('.rounded-full.bg-danger');
+                statusDot.classList.remove('bg-danger');
+                statusDot.classList.add('bg-success');
+                
+                const statusText = statusDot.nextElementSibling;
+                statusText.textContent = 'Connected';
+                statusText.classList.remove('text-danger');
+                statusText.classList.add('text-success');
+                
+                // Show option to continue
+                setTimeout(() => {
+                    showScreen('home-screen');
+                }, 1000);
+            }, 1500);
+        }
+        
+        // Start breathing test
+        function startTest() {
+            document.getElementById('test-instructions').style.display = 'none';
+            document.getElementById('test-in-progress').style.display = 'flex';
+            
+            // Start timer
+            let seconds = 0;
+            const timerElement = document.getElementById('test-timer');
+            
+            const timer = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                timerElement.textContent = `${mins}:${secs}`;
+            }, 1000);
+
+            // Simulate flow graph data
+            const canvas = document.getElementById('flow-graph');
+            const ctx = canvas.getContext('2d');
+            let flowData = [];
+            let time = 0;
+
+            function drawFlowGraph() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                ctx.strokeStyle = '#cfa67d';
+                ctx.lineWidth = 2;
+
+                if (flowData.length > 0) {
+                    ctx.moveTo(0, canvas.height - (flowData[0] / 10 * canvas.height)); // Scale flow value to canvas height
+                    for (let i = 1; i < flowData.length; i++) {
+                        ctx.lineTo(i / flowData.length * canvas.width, canvas.height - (flowData[i] / 10 * canvas.height));
+                    }
+                }
+                ctx.stroke();
+            }
+
+            const graphInterval = setInterval(() => {
+                // Simulate fluctuating flow data, peaking and then declining
+                if (time < 30) { // Initial breath in
+                    flowData.push(Math.sin(time * 0.5) * 2 + 3);
+                } else if (time < 60) { // Exhale
+                    flowData.push(Math.max(0, 8 - ((time - 30) * 0.2)));
+                } else {
+                    flowData.push(0.5 + Math.random()); // Small fluctuations after exhale
+                }
+
+
+                time++;
+                drawFlowGraph();
+            }, 100); // Update graph every 100ms
+
+            // Stop test after 10 seconds (example duration)
+            setTimeout(() => {
+                clearInterval(timer);
+                clearInterval(graphInterval);
+                stopTest();
+            }, 10000); // Test runs for 10 seconds
+        }
+
+        // Stop breathing test
+        function stopTest() {
+            // In a real application, you would process the collected data here
+            showScreen('result-screen');
+        }
+
+        // Initial setup for navigation highlighting on load if needed
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentScreenId = document.querySelector('.screen.active').id;
+            updateNavHighlight(currentScreenId);
+        });
+    </script>
+</body>
+</html>
