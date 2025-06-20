@@ -1,0 +1,954 @@
+<!-- Login/Signup Screen -->
+<div id="auth-screen" class="screen flex flex-col items-center justify-center bg-white">
+    <div class="w-full max-w-md p-6 card">
+        <div class="text-center mb-8">
+            <svg class="w-16 h-16 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C10.9 2 10 2.9 10 4V7.17C10 7.7 9.64 8.17 9.12 8.32C6.36 9.12 4.5 11.93 4.5 15C4.5 15.7 4.59 16.38 4.76 17H7C7.33 17 7.63 17.16 7.8 17.43L9.8 20.43C9.93 20.62 10 20.84 10 21.08V22H14V21.08C14 20.84 14.07 20.62 14.2 20.43L16.2 17.43C16.37 17.16 16.67 17 17 17H19.24C19.41 16.38 19.5 15.7 19.5 15C19.5 11.93 17.64 9.12 14.88 8.32C14.36 8.17 14 7.7 14 7.17V4C14 2.9 13.1 2 12 2Z" fill="#cfa67d"/>
+            </svg>
+            <h2 class="text-2xl font-bold text-dark mt-4">Welcome to BreatheFree</h2>
+            <p class="text-gray-500 text-sm mt-1">Sign in to continue</p>
+        </div>
+
+        <div class="mb-6">
+            <div id="login-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="email">Email</label>
+                    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="email" type="email" placeholder="your@email.com">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="password">Password</label>
+                    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="password" type="password" placeholder="••••••••">
+                </div>
+                <button class="w-full bg-primary text-white py-2 px-4 rounded-lg font-medium btn" onclick="showScreen('home-screen')">Sign In</button>
+                <div class="text-center mt-4">
+                    <a href="#" class="text-primary text-sm" onclick="toggleAuthForm('signup-form')">Don't have an account? Sign up</a>
+                </div>
+            </div>
+
+            <div id="signup-form" class="hidden">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="name">Full Name</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="name" type="text" placeholder="John Doe">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="age">Age</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="age" type="number" placeholder="35">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="gender">Gender</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="gender">
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="height">Height (cm)</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="height" type="number" placeholder="175">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="weight">Weight (kg)</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="weight" type="number" placeholder="70">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="signup-email">Email</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="signup-email" type="email" placeholder="your@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="signup-password">Password</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="signup-password" type="password" placeholder="••••••••">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="confirm-password">Confirm Password</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="confirm-password" type="password" placeholder="••••••••">
+                    </div>
+                </div>
+                <button class="w-full bg-primary text-white py-2 px-4 rounded-lg font-medium mt-2 btn" onclick="showScreen('home-screen')">Sign Up</button>
+                <div class="text-center mt-4">
+                    <a href="#" class="text-primary text-sm" onclick="toggleAuthForm('login-form')">Already have an account? Sign in</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium btn mb-4" onclick="showScreen('home-screen')">Continue as Guest</button>
+        </div>
+    </div>
+</div>
+
+<!-- Home Dashboard -->
+<div id="home-screen" class="screen flex flex-col bg-secondary">
+    <header class="bg-white p-4 shadow-sm">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C10.9 2 10 2.9 10 4V7.17C10 7.7 9.64 8.17 9.12 8.32C6.36 9.12 4.5 11.93 4.5 15C4.5 15.7 4.59 16.38 4.76 17H7C7.33 17 7.63 17.16 7.8 17.43L9.8 20.43C9.93 20.62 10 20.84 10 21.08V22H14V21.08C14 20.84 14.07 20.62 14.2 20.43L16.2 17.43C16.37 17.16 16.67 17 17 17H19.24C19.41 16.38 19.5 15.7 19.5 15C19.5 11.93 17.64 9.12 14.88 8.32C14.36 8.17 14 7.7 14 7.17V4C14 2.9 13.1 2 12 2Z" fill="#cfa67d"/>
+                </svg>
+                <h1 class="text-xl font-bold ml-2">BreatheFree</h1>
+            </div>
+            <button onclick="showScreen('profile-screen')" class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center">
+                <span class="font-medium">JD</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold">Hi John, ready for your next test?</h2>
+            <p class="text-gray-600">Let's check your lung function today</p>
+        </div>
+
+        <div class="mb-8">
+            <button onclick="showScreen('test-screen')" class="w-full bg-primary text-white py-4 px-6 rounded-xl font-medium text-lg btn flex items-center justify-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Start Spirometry Test
+            </button>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-3">Last Test Results</h3>
+            <div class="card p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-500">May 15, 2023</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Good</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-500 text-sm">FVC</p>
+                        <div class="flex items-center">
+                            <span class="text-lg font-semibold">3.8</span>
+                            <span class="text-gray-500 text-sm ml-1">L</span>
+                        </div>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-bar-fill bg-green-500" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">FEV1</p>
+                        <div class="flex items-center">
+                            <span class="text-lg font-semibold">3.2</span>
+                            <span class="text-gray-500 text-sm ml-1">L</span>
+                        </div>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-bar-fill bg-green-500" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">PEF</p>
+                        <div class="flex items-center">
+                            <span class="text-lg font-semibold">8.5</span>
+                            <span class="text-gray-500 text-sm ml-1">L/s</span>
+                        </div>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-bar-fill bg-yellow-500" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Lung Age</p>
+                        <div class="flex items-center">
+                            <span class="text-lg font-semibold">36</span>
+                            <span class="text-gray-500 text-sm ml-1">years</span>
+                        </div>
+                        <div class="progress-bar mt-1">
+                            <div class="progress-bar-fill bg-green-500" style="width: 90%"></div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showScreen('results-screen')" class="w-full mt-4 text-primary font-medium py-2 border border-primary rounded-lg">View Details</button>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-semibold">Recent Tests</h3>
+                <button onclick="showScreen('reports-screen')" class="text-primary text-sm">View All</button>
+            </div>
+            <div class="space-y-3">
+                <div class="card p-3 flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">May 15, 2023</p>
+                        <p class="text-gray-500 text-sm">FEV1: 3.2L | FVC: 3.8L</p>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Good</span>
+                </div>
+                <div class="card p-3 flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">May 8, 2023</p>
+                        <p class="text-gray-500 text-sm">FEV1: 3.1L | FVC: 3.7L</p>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Good</span>
+                </div>
+                <div class="card p-3 flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">May 1, 2023</p>
+                        <p class="text-gray-500 text-sm">FEV1: 2.9L | FVC: 3.6L</p>
+                    </div>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Fair</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bg-white p-3 shadow-lg flex justify-around">
+        <button onclick="showScreen('home-screen')" class="flex flex-col items-center text-primary">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+            </svg>
+            <span class="text-xs mt-1">Home</span>
+        </button>
+        <button onclick="showScreen('reports-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Reports</span>
+        </button>
+        <button onclick="showScreen('test-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Test</span>
+        </button>
+        <button onclick="showScreen('profile-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Profile</span>
+        </button>
+    </nav>
+</div>
+
+<!-- Test Screen -->
+<div id="test-screen" class="screen flex flex-col bg-secondary">
+    <header class="bg-white p-4 shadow-sm">
+        <div class="flex items-center">
+            <button onclick="showScreen('home-screen')" class="mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-xl font-bold">Spirometry Test</h1>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4 flex flex-col items-center justify-center">
+        <div id="test-start" class="text-center">
+            <svg class="w-24 h-24 mx-auto mb-6 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C10.9 2 10 2.9 10 4V7.17C10 7.7 9.64 8.17 9.12 8.32C6.36 9.12 4.5 11.93 4.5 15C4.5 15.7 4.59 16.38 4.76 17H7C7.33 17 7.63 17.16 7.8 17.43L9.8 20.43C9.93 20.62 10 20.84 10 21.08V22H14V21.08C14 20.84 14.07 20.62 14.2 20.43L16.2 17.43C16.37 17.16 16.67 17 17 17H19.24C19.41 16.38 19.5 15.7 19.5 15C19.5 11.93 17.64 9.12 14.88 8.32C14.36 8.17 14 7.7 14 7.17V4C14 2.9 13.1 2 12 2Z" fill="#cfa67d"/>
+            </svg>
+            <h2 class="text-2xl font-bold mb-2">Ready for your test?</h2>
+            <p class="text-gray-600 mb-8">Make sure your device is connected via Wi-Fi</p>
+            <button id="begin-test-btn" class="bg-primary text-white py-3 px-8 rounded-xl font-medium text-lg btn">Begin Test</button>
+        </div>
+
+        <div id="countdown" class="hidden text-center">
+            <div class="text-8xl font-bold text-primary mb-4" id="countdown-number">3</div>
+            <p class="text-gray-600">Get ready to breathe</p>
+        </div>
+
+        <div id="breathing-instruction" class="hidden text-center">
+            <svg class="w-32 h-32 mx-auto mb-6 text-primary breathe-animation" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C10.9 2 10 2.9 10 4V7.17C10 7.7 9.64 8.17 9.12 8.32C6.36 9.12 4.5 11.93 4.5 15C4.5 15.7 4.59 16.38 4.76 17H7C7.33 17 7.63 17.16 7.8 17.43L9.8 20.43C9.93 20.62 10 20.84 10 21.08V22H14V21.08C14 20.84 14.07 20.62 14.2 20.43L16.2 17.43C16.37 17.16 16.67 17 17 17H19.24C19.41 16.38 19.5 15.7 19.5 15C19.5 11.93 17.64 9.12 14.88 8.32C14.36 8.17 14 7.7 14 7.17V4C14 2.9 13.1 2 12 2Z" fill="#cfa67d"/>
+            </svg>
+            <h2 class="text-2xl font-bold mb-2" id="breath-instruction">Take a deep breath</h2>
+            <p class="text-gray-600 mb-4" id="breath-detail">Fill your lungs completely</p>
+            <div class="w-64 h-2 bg-gray-200 rounded-full mx-auto">
+                <div class="h-full bg-primary rounded-full" id="breath-progress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="data-loading" class="hidden text-center">
+            <div class="loading-spinner mx-auto mb-6"></div>
+            <h2 class="text-2xl font-bold mb-2">Processing Data</h2>
+            <p class="text-gray-600">Receiving data from your device</p>
+        </div>
+    </main>
+</div>
+
+<!-- Results Screen -->
+<div id="results-screen" class="screen flex flex-col bg-secondary">
+    <header class="bg-white p-4 shadow-sm">
+        <div class="flex items-center">
+            <button onclick="showScreen('home-screen')" class="mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-xl font-bold">Test Results</h1>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4 overflow-y-auto">
+        <div class="mb-4 flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-bold">May 15, 2023</h2>
+                <p class="text-gray-600">10:30 AM</p>
+            </div>
+            <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">Good</span>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Key Parameters</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-gray-500 text-sm">FVC (Forced Vital Capacity)</p>
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">3.8</span>
+                        <span class="text-gray-500 text-sm ml-1">L</span>
+                        <span class="text-green-500 text-sm ml-2">(85%)</span>
+                    </div>
+                    <div class="progress-bar mt-1">
+                        <div class="progress-bar-fill bg-green-500" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">FEV1 (Forced Expiratory Volume)</p>
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">3.2</span>
+                        <span class="text-gray-500 text-sm ml-1">L</span>
+                        <span class="text-green-500 text-sm ml-2">(80%)</span>
+                    </div>
+                    <div class="progress-bar mt-1">
+                        <div class="progress-bar-fill bg-green-500" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">FEV1/FVC Ratio</p>
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">0.84</span>
+                        <span class="text-green-500 text-sm ml-2">(84%)</span>
+                    </div>
+                    <div class="progress-bar mt-1">
+                        <div class="progress-bar-fill bg-green-500" style="width: 84%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">PEF (Peak Expiratory Flow)</p>
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">8.5</span>
+                        <span class="text-gray-500 text-sm ml-1">L/s</span>
+                        <span class="text-yellow-500 text-sm ml-2">(75%)</span>
+                    </div>
+                    <div class="progress-bar mt-1">
+                        <div class="progress-bar-fill bg-yellow-500" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">MEF25 (Mid-Expiratory Flow)</p>
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">2.1</span>
+                        <span class="text-gray-500 text-sm ml-1">L/s</span>
+                        <span class="text-yellow-500 text-sm ml-2">(70%)</span>
+                    </div>
+                    <div class="progress-bar mt-1">
+                        <div class="progress-bar-fill bg-yellow-500" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Lung Age</p>
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">36</span>
+                        <span class="text-gray-500 text-sm ml-1">years</span>
+                        <span class="text-green-500 text-sm ml-2">(+1)</span>
+                    </div>
+                    <div class="progress-bar mt-1">
+                        <div class="progress-bar-fill bg-green-500" style="width: 90%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Flow vs Time</h3>
+            <canvas id="flowTimeChart" height="200"></canvas>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Volume vs Time</h3>
+            <canvas id="volumeTimeChart" height="200"></canvas>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-6">
+            <button class="bg-primary text-white py-2 px-4 rounded-lg font-medium btn flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                </svg>
+                Save
+            </button>
+            <button class="bg-white text-primary border border-primary py-2 px-4 rounded-lg font-medium btn flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                CSV
+            </button>
+            <button class="bg-white text-primary border border-primary py-2 px-4 rounded-lg font-medium btn flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                PDF
+            </button>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-3">Interpretation</h3>
+            <p class="text-gray-700">Your lung function is within normal range. Your FEV1/FVC ratio is good, indicating healthy airways. Your PEF is slightly lower than expected, which may benefit from breathing exercises.</p>
+        </div>
+
+        <div class="card p-4">
+            <h3 class="text-lg font-semibold mb-3">Recommendations</h3>
+            <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                <li>Continue regular spirometry tests to monitor your lung health</li>
+                <li>Consider daily breathing exercises to improve your peak flow</li>
+                <li>Maintain good air quality in your living environment</li>
+                <li>Schedule a follow-up test in 2 weeks</li>
+            </ul>
+        </div>
+    </main>
+</div>
+
+<!-- Reports Screen -->
+<div id="reports-screen" class="screen flex flex-col bg-secondary">
+    <header class="bg-white p-4 shadow-sm">
+        <div class="flex items-center">
+            <button onclick="showScreen('home-screen')" class="mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-xl font-bold">Test Reports</h1>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4">
+        <div class="mb-6">
+            <div class="card p-4">
+                <h3 class="text-lg font-semibold mb-3">Filter Reports</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="start-date">Start Date</label>
+                        <input type="date" id="start-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="end-date">End Date</label>
+                        <input type="date" id="end-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                </div>
+                <button class="w-full bg-primary text-white py-2 px-4 rounded-lg font-medium mt-4 btn">Apply Filter</button>
+            </div>
+        </div>
+
+        <div class="mb-4 flex justify-between items-center">
+            <h3 class="text-lg font-semibold">All Reports</h3>
+            <button class="text-primary text-sm flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Download All
+            </button>
+        </div>
+
+        <div class="space-y-3">
+            <div class="card p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">May 15, 2023</h4>
+                        <p class="text-gray-500 text-sm">10:30 AM</p>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Good</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div>
+                        <p class="text-gray-500 text-xs">FVC</p>
+                        <p class="font-medium">3.8L (85%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">FEV1</p>
+                        <p class="font-medium">3.2L (80%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">PEF</p>
+                        <p class="font-medium">8.5L/s (75%)</p>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <button onclick="showScreen('results-screen')" class="text-primary font-medium text-sm">View Details</button>
+                    <button class="text-gray-500 text-sm flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+
+            <div class="card p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">May 8, 2023</h4>
+                        <p class="text-gray-500 text-sm">11:15 AM</p>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Good</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div>
+                        <p class="text-gray-500 text-xs">FVC</p>
+                        <p class="font-medium">3.7L (83%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">FEV1</p>
+                        <p class="font-medium">3.1L (78%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">PEF</p>
+                        <p class="font-medium">8.3L/s (73%)</p>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <button class="text-primary font-medium text-sm">View Details</button>
+                    <button class="text-gray-500 text-sm flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+
+            <div class="card p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">May 1, 2023</h4>
+                        <p class="text-gray-500 text-sm">9:45 AM</p>
+                    </div>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Fair</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div>
+                        <p class="text-gray-500 text-xs">FVC</p>
+                        <p class="font-medium">3.6L (80%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">FEV1</p>
+                        <p class="font-medium">2.9L (73%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">PEF</p>
+                        <p class="font-medium">7.9L/s (70%)</p>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <button class="text-primary font-medium text-sm">View Details</button>
+                    <button class="text-gray-500 text-sm flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+
+            <div class="card p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h4 class="font-semibold">April 24, 2023</h4>
+                        <p class="text-gray-500 text-sm">10:10 AM</p>
+                    </div>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Fair</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div>
+                        <p class="text-gray-500 text-xs">FVC</p>
+                        <p class="font-medium">3.5L (78%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">FEV1</p>
+                        <p class="font-medium">2.8L (70%)</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-xs">PEF</p>
+                        <p class="font-medium">7.7L/s (68%)</p>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <button class="text-primary font-medium text-sm">View Details</button>
+                    <button class="text-gray-500 text-sm flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bg-white p-3 shadow-lg flex justify-around">
+        <button onclick="showScreen('home-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+            </svg>
+            <span class="text-xs mt-1">Home</span>
+        </button>
+        <button onclick="showScreen('reports-screen')" class="flex flex-col items-center text-primary">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Reports</span>
+        </button>
+        <button onclick="showScreen('test-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Test</span>
+        </button>
+        <button onclick="showScreen('profile-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Profile</span>
+        </button>
+    </nav>
+</div>
+
+<!-- Profile Settings Screen -->
+<div id="profile-screen" class="screen flex flex-col bg-secondary">
+    <header class="bg-white p-4 shadow-sm">
+        <div class="flex items-center">
+            <button onclick="showScreen('home-screen')" class="mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-xl font-bold">Profile Settings</h1>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4">
+        <div class="flex flex-col items-center mb-6">
+            <div class="w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center text-3xl font-bold mb-3">
+                JD
+            </div>
+            <h2 class="text-xl font-bold">John Doe</h2>
+            <p class="text-gray-600">john.doe@example.com</p>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="profile-name">Full Name</label>
+                    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="profile-name" type="text" value="John Doe">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="profile-email">Email</label>
+                    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="profile-email" type="email" value="john.doe@example.com">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="profile-age">Age</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="profile-age" type="number" value="35">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="profile-gender">Gender</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="profile-gender">
+                            <option value="male" selected>Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="profile-height">Height (cm)</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="profile-height" type="number" value="175">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="profile-weight">Weight (kg)</label>
+                        <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="profile-weight" type="number" value="70">
+                    </div>
+                </div>
+            </div>
+            <button class="w-full bg-primary text-white py-2 px-4 rounded-lg font-medium mt-4 btn">Save Changes</button>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Preferences</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Language</label>
+                    <div class="flex">
+                        <button class="flex-1 bg-primary text-white py-2 px-4 rounded-l-lg font-medium">English 🇬🇧</button>
+                        <button class="flex-1 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-r-lg font-medium">Hindi 🇮🇳</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Notifications</label>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="notifications" class="w-4 h-4 text-primary" checked>
+                        <label for="notifications" class="ml-2 text-gray-700">Enable push notifications</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Test Reminders</label>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="reminders" class="w-4 h-4 text-primary" checked>
+                        <label for="reminders" class="ml-2 text-gray-700">Send weekly test reminders</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Device Connection</h3>
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="font-medium">AR-Medics Spirometer</p>
+                    <p class="text-gray-500 text-sm">Connected via Wi-Fi</p>
+                </div>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Connected</span>
+            </div>
+            <button class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium btn">Reconnect Device</button>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Account</h3>
+            <button class="w-full bg-white border border-red-500 text-red-500 py-2 px-4 rounded-lg font-medium btn mb-3">Change Password</button>
+            <button class="w-full bg-white border border-red-500 text-red-500 py-2 px-4 rounded-lg font-medium btn" onclick="showScreen('auth-screen')">Logout</button>
+        </div>
+    </main>
+
+    <nav class="bg-white p-3 shadow-lg flex justify-around">
+        <button onclick="showScreen('home-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+            </svg>
+            <span class="text-xs mt-1">Home</span>
+        </button>
+        <button onclick="showScreen('reports-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Reports</span>
+        </button>
+        <button onclick="showScreen('test-screen')" class="flex flex-col items-center text-gray-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Test</span>
+        </button>
+        <button onclick="showScreen('profile-screen')" class="flex flex-col items-center text-primary">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-xs mt-1">Profile</span>
+        </button>
+    </nav>
+</div>
+
+<script>
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show splash screen for 2 seconds, then show auth screen
+        setTimeout(() => {
+            showScreen('auth-screen');
+        }, 2000);
+
+        // Initialize charts
+        initCharts();
+
+        // Set up test flow
+        document.getElementById('begin-test-btn').addEventListener('click', function() {
+            document.getElementById('test-start').classList.add('hidden');
+            document.getElementById('countdown').classList.remove('hidden');
+            
+            let count = 3;
+            const countdownElement = document.getElementById('countdown-number');
+            
+            const countdownInterval = setInterval(() => {
+                count--;
+                countdownElement.textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown').classList.add('hidden');
+                    document.getElementById('breathing-instruction').classList.remove('hidden');
+                    
+                    // Simulate breathing test
+                    simulateBreathingTest();
+                }
+            }, 1000);
+        });
+    });
+
+    // Function to show a specific screen and hide others
+    function showScreen(screenId) {
+        // Hide all screens
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        
+        // Show the requested screen
+        document.getElementById(screenId).classList.add('active');
+        
+        // Add fade-in animation
+        document.getElementById(screenId).classList.add('fade-in');
+        
+        // If showing results screen, update charts
+        if (screenId === 'results-screen') {
+            updateCharts();
+        }
+    }
+
+    // Toggle between login and signup forms
+    function toggleAuthForm(formId) {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('signup-form').classList.add('hidden');
+        document.getElementById(formId).classList.remove('hidden');
+    }
+
+    // Initialize charts
+    function initCharts() {
+        // Flow vs Time chart
+        window.flowTimeChart = new Chart(
+            document.getElementById('flowTimeChart'),
+            {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 10}, (_, i) => i),
+                    datasets: [{
+                        label: 'Flow (L/s)',
+                        data: [],
+                        borderColor: '#cfa67d',
+                        backgroundColor: 'rgba(207, 166, 125, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Flow (L/s)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (s)'
+                            }
+                        }
+                    }
+                }
+            }
+        );
+
+        // Volume vs Time chart
+        window.volumeTimeChart = new Chart(
+            document.getElementById('volumeTimeChart'),
+            {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 10}, (_, i) => i),
+                    datasets: [{
+                        label: 'Volume (L)',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Volume (L)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (s)'
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    // Update charts with sample data
+    function updateCharts() {
+        // Sample flow data
+        const flowData = [0, 2, 5, 8.5, 7, 5, 3, 2, 1, 0];
+        window.flowTimeChart.data.datasets[0].data = flowData;
+        window.flowTimeChart.update();
+
+        // Sample volume data
+        const volumeData = [0, 0.5, 1.5, 2.5, 3.2, 3.5, 3.7, 3.8, 3.8, 3.8];
+        window.volumeTimeChart.data.datasets[0].data = volumeData;
+        window.volumeTimeChart.update();
+    }
+
+    // Simulate breathing test
+    function simulateBreathingTest() {
+        const instructionElement = document.getElementById('breath-instruction');
+        const detailElement = document.getElementById('breath-detail');
+        const progressElement = document.getElementById('breath-progress');
+        
+        // Step 1: Deep breath in
+        instructionElement.textContent = "Take a deep breath";
+        detailElement.textContent = "Fill your lungs completely";
+        
+        let progress = 0;
+        const breathInInterval = setInterval(() => {
+            progress += 5;
+            progressElement.style.width = `${progress}%`;
+            
+            if (progress >= 100) {
+                clearInterval(breathInInterval);
+                
+                // Step 2: Blow out
+                instructionElement.textContent = "Blow out hard and fast!";
+                detailElement.textContent = "Keep going until your lungs are empty";
+                
+                let blowProgress = 100;
+                const blowOutInterval = setInterval(() => {
+                    blowProgress -= 3;
+                    progressElement.style.width = `${blowProgress}%`;
+                    
+                    if (blowProgress <= 0) {
+                        clearInterval(blowOutInterval);
+                        
+                        // Show loading spinner
+                        document.getElementById('breathing-instruction').classList.add('hidden');
+                        document.getElementById('data-loading').classList.remove('hidden');
+                        
+                        // Simulate data processing
+                        setTimeout(() => {
+                            showScreen('results-screen');
+                        }, 2000);
+                    }
+                }, 100);
+            }
+        }, 100);
+    }
+</script>
